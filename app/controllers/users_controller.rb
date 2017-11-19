@@ -73,14 +73,14 @@ class UsersController < ApplicationController
         User.order('random()').first
       end
       sign_in(@user)
-      redirect_to profile_url(username: user.username)
+      redirect_to profile_url(username: @user.username)
     end
   end
 
   def destroy
     @user = User.find(params[:id])
     head(:forbidden) unless current_user.can_edit?(@user)
-    UserMailer.destroy_email(@user).deliver!
+    UserMailer.destroy_email(@user).deliver_now
     @user.destroy
     if @user == current_user
       sign_out
